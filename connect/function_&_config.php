@@ -1,7 +1,7 @@
 <?php
-$dsn = "mysql:host=localhost;dbname=chat";
+$dsn = "mysql:host=db5006712685.hosting-data.io;dbname=dbs5554618";
 $opt = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8");
-$con = new PDO($dsn, "root", "", $opt);
+$con = new PDO($dsn, "dbu2658258", "Abdou123.", $opt);
 
 // function for transfer user to fronend page
 function strUser($data){
@@ -23,14 +23,14 @@ function strUser($data){
 function getUser($id=''){
   global $con;
   if($id == ''){
-    $sql = $con->prepare("SELECT UniqueID, Fname, Lname, img, status FROM users");
+    $sql = $con->prepare("SELECT UniqueID, Fname, Lname, img, status FROM chatUsers");
     $sql->execute();
 
     $out = $sql->fetchAll();
     return $out;
   
   }else{
-    $sql = $con->prepare("SELECT UniqueID, Fname, Lname, img, status FROM users WHERE UniqueID = ?");
+    $sql = $con->prepare("SELECT UniqueID, Fname, Lname, img, status FROM chatUsers WHERE UniqueID = ?");
     $sql->execute(array($id));
 
     $out = $sql->fetch();

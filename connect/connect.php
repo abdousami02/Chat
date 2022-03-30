@@ -27,7 +27,7 @@ if(isset($_GET['signup']) ){
         $msg =  "email not valid";
 
       }else{
-        $sql = mysqli_query($con, "SELECT email FROM users WHERE email = '{$email}'");
+        $sql = mysqli_query($con, "SELECT email FROM chatUsers WHERE email = '{$email}'");
         if(mysqli_num_rows($sql) > 0){
           $stat = 0;
           $msg =   "This email already exist";
@@ -63,7 +63,7 @@ if(isset($_GET['signup']) ){
               }else{
                 $rand_id = rand(time(), 10000000);
                 
-                $sql2 = mysqli_query($con, "INSERT INTO users (UniqueID, Fname, Lname, Email, Password, img, status)
+                $sql2 = mysqli_query($con, "INSERT INTO chatUsers (UniqueID, Fname, Lname, Email, Password, img, status)
                 VALUES ($rand_id, '{$fname}','{$lname}','{$email}','{$pass}','{$new_img_name}', 1)");
                 
                 if($sql2 != true){
@@ -71,7 +71,7 @@ if(isset($_GET['signup']) ){
                   $msg = "same thing wrong";
 
                 }else{
-                  $sql3 = mysqli_query($con, "SELECT UniqueID, Email, Fname, Lname FROM users WHERE Email = '{$email}'");
+                  $sql3 = mysqli_query($con, "SELECT UniqueID, Email, Fname, Lname FROM chatUsers WHERE Email = '{$email}'");
                   if(mysqli_num_rows($sql3) > 0){
 
                     $user = mysqli_fetch_assoc($sql3);
@@ -114,20 +114,20 @@ if(isset($_GET['signup']) ){
       $msg = "email not valid";
 
     }else{
-      $sql1 = mysqli_query($con, "SELECT COUNT(Email) FROM users WHERE Email = '{$email}'");
+      $sql1 = mysqli_query($con, "SELECT COUNT(Email) FROM chatUsers WHERE Email = '{$email}'");
       if(mysqli_fetch_column($sql1) == 0){
         $stat = 0;
         $msg = "email Wrong";
         //echo "dd";
 
       }else{
-        $sql2 = mysqli_query($con, "SELECT UniqueID, Fname, Lname, img FROM users WHERE Email = '{$email}' AND Password = '{$pass}'");
+        $sql2 = mysqli_query($con, "SELECT UniqueID, Fname, Lname, img FROM chatUsers WHERE Email = '{$email}' AND Password = '{$pass}'");
         if(mysqli_num_rows($sql2) == 0){
           $stat = 0;
           $msg = "password wrong";
 
         }else{
-          $sql4 = mysqli_query($con, "UPDATE users SET status = 1 WHERE Email = '{$email}'");
+          $sql4 = mysqli_query($con, "UPDATE chatUsers SET status = 1 WHERE Email = '{$email}'");
           
           $user = mysqli_fetch_assoc($sql2);
           $_SESSION['id'] = $user['UniqueID'];
@@ -149,7 +149,7 @@ if(isset($_GET['signup']) ){
 }elseif( isset($_GET['logout']) ){
 
   $id = $_SESSION['id'];
-  $sql = mysqli_query($con, "UPDATE users SET status = 0 WHERE UniqueID = '{$id}'");
+  $sql = mysqli_query($con, "UPDATE chatUsers SET status = 0 WHERE UniqueID = '{$id}'");
   
   session_unset();
   session_destroy();

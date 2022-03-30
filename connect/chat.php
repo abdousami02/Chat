@@ -22,7 +22,7 @@ if(count($_SESSION) == 0 && $_SESSION['id'] == ''){
 
     }else{
       $srch =  $_POST['search'];
-      $sql = $con->prepare("SELECT UniqueID, Fname, Lname, img FROM users 
+      $sql = $con->prepare("SELECT UniqueID, Fname, Lname, img FROM chatUsers 
               WHERE Fname LIKE :srch OR Lname LIKE :srch ");
       $sql->execute(array('srch' => "%{$srch}%"));
 
@@ -56,7 +56,7 @@ if(count($_SESSION) == 0 && $_SESSION['id'] == ''){
       $send = $_POST['send'];
       $rec = $_POST['rec'];
 
-      $sql = $con->prepare("SELECT * FROM message WHERE 
+      $sql = $con->prepare("SELECT * FROM chatMessage WHERE 
             ( send_msg_id = :send_id AND rec_msg_id = :rec_id ) 
             OR ( send_msg_id = :rec_id AND rec_msg_id = :send_id ) 
              ORDER BY msg_id DESC LIMIT 20");
@@ -94,7 +94,7 @@ if(count($_SESSION) == 0 && $_SESSION['id'] == ''){
     
     }else{
 
-      $sql = $con->prepare("INSERT INTO message (send_msg_id, rec_msg_id, msg) VALUES (:send_id, :rec_id, :msg)");
+      $sql = $con->prepare("INSERT INTO chatMessage (send_msg_id, rec_msg_id, msg) VALUES (:send_id, :rec_id, :msg)");
       $sql->execute(array(
         "send_id" => $send_id, 
         "rec_id"  => $rec_id, 
@@ -129,7 +129,7 @@ if(count($_SESSION) == 0 && $_SESSION['id'] == ''){
       $rec = $_POST['rec'];
       $time = $_POST['time'];
 
-      $sql = $con->prepare("SELECT * FROM message WHERE (date BETWEEN :tim AND NOW()) AND
+      $sql = $con->prepare("SELECT * FROM chatMessage WHERE (date BETWEEN :tim AND NOW()) AND
             ( ( send_msg_id = :send_id AND rec_msg_id = :rec_id ) 
             OR ( send_msg_id = :rec_id AND rec_msg_id = :send_id ) )
              ORDER BY msg_id DESC LIMIT 4");
