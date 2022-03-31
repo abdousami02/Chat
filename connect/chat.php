@@ -11,8 +11,27 @@ if(count($_SESSION) == 0 && $_SESSION['id'] == ''){
 
   // get user to page
   if(isset($_GET['getUser'])){
-    $out = getUser();
-    echo json_encode(strUser($out));
+    $out = strUser(getUser());
+    $last_msg = array();
+    foreach($out as $user => $val){
+      $sql = $con->prepare("SELECT msg FROM chatMessage WHERE 
+                ( send_msg_id = :send_id AND rec_msg_id = :rec_id ) 
+                OR ( send_msg_id = :rec_id AND rec_msg_id = :send_id ) 
+                ORDER BY msg_id DESC LIMIT 1");
+      $sql->execute(array(
+        ":send_id" => $id,
+        ":rec_id" => $user
+      ));
+      $out[$user]["lastmsg"] = $sql->fetch(PDO::FETCH_ASSOC)['msg'];
+
+      //$last_msg[] = $user. " ".$id;
+
+    }
+    // $dd = array(
+    //   "users" => $out,
+    //   "last_msg" => $last_msg
+    // );
+    echo json_encode($out);
   
 
   // resulte of search
@@ -26,7 +45,7 @@ if(count($_SESSION) == 0 && $_SESSION['id'] == ''){
               WHERE Fname LIKE :srch OR Lname LIKE :srch ");
       $sql->execute(array('srch' => "%{$srch}%"));
 
-      $out = $sql->fetchAll();
+      $out = $sql->fetchAll(PDO::FETCH_ASSOC);
       echo json_encode(strUser($out));
     }
 
@@ -61,7 +80,6 @@ if(count($_SESSION) == 0 && $_SESSION['id'] == ''){
             OR ( send_msg_id = :rec_id AND rec_msg_id = :send_id ) 
              ORDER BY msg_id DESC LIMIT 20");
       $sql->execute(array(
-        "tim"     => "2022-03-30 08:56:52",
         "send_id" => $send,
         "rec_id"  => $rec
       ));
@@ -132,7 +150,7 @@ if(count($_SESSION) == 0 && $_SESSION['id'] == ''){
       $sql = $con->prepare("SELECT * FROM chatMessage WHERE (date BETWEEN :tim AND NOW()) AND
             ( ( send_msg_id = :send_id AND rec_msg_id = :rec_id ) 
             OR ( send_msg_id = :rec_id AND rec_msg_id = :send_id ) )
-             ORDER BY msg_id DESC LIMIT 4");
+            ORDER BY msg_id LIMIT 4");
       $sql->execute(array(
         "tim"     => $time,
         "send_id" => $send,

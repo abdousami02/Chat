@@ -1,7 +1,14 @@
 <?php
-$dsn = "mysql:host=db5006712685.hosting-data.io;dbname=dbs5554618";
+// $dsn = "mysql:host=db5006712685.hosting-data.io;dbname=dbs5554618";
+// $db_user = "dbu2658258";
+// $db_pass = "Abdou123.";
+
+$dsn = "mysql:host=localhost;dbname=chat";
+$db_user = "root";
+$db_pass = "";
+
 $opt = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8");
-$con = new PDO($dsn, "dbu2658258", "Abdou123.", $opt);
+$con = new PDO($dsn, $db_user, $db_pass , $opt);
 
 // function for transfer user to fronend page
 function strUser($data){

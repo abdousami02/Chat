@@ -3,6 +3,7 @@
 
   if(count($_SESSION) > 0 ){
     header('location: user.php');
+    exit();
 
   }else{
     include "include/header.php";

@@ -1,6 +1,7 @@
-<?php 
+<?php
 
-$con = mysqli_connect("localhost", "root", "", "chat");
+include "function_&_config.php";
+
 session_start();
 
 // form SignUp Page
@@ -27,17 +28,17 @@ if(isset($_GET['signup']) ){
         $msg =  "email not valid";
 
       }else{
-        $sql = mysqli_query($con, "SELECT email FROM chatUsers WHERE email = '{$email}'");
-        if(mysqli_num_rows($sql) > 0){
+        $sql = $con->prepare("SELECT email FROM chatUsers WHERE email = '{$email}'");
+        if($sql->rowCount() > 0){
           $stat = 0;
-          $msg =   "This email already exist";
+          $msg = "This email already exist";
         
         }else{
           $image = $_FILES['image'];
 
           if($image['size'] == 0){
             $stat = 0;
-            $msg =  "Please upload image";
+            $msg = "Please upload image";
 
           }else{
             
@@ -63,18 +64,27 @@ if(isset($_GET['signup']) ){
               }else{
                 $rand_id = rand(time(), 10000000);
                 
-                $sql2 = mysqli_query($con, "INSERT INTO chatUsers (UniqueID, Fname, Lname, Email, Password, img, status)
-                VALUES ($rand_id, '{$fname}','{$lname}','{$email}','{$pass}','{$new_img_name}', 1)");
+                $sql2 = $con->prepare("INSERT INTO chatUsers (UniqueID, Fname, Lname, Email, Password, img, status)
+                VALUES (:id, :fname, :lname, :email, :pass, :img, 1)");
+                $sqle->execute(array(
+                  "id" => $rand_id,
+                  "fname" => $fname,
+                  "lname" => $lname,
+                  "email" => $email,
+                  "pass" => $pass,
+                  "img"  => $new_img_name
+                ));
                 
                 if($sql2 != true){
                   $stat = 0;
                   $msg = "same thing wrong";
 
                 }else{
-                  $sql3 = mysqli_query($con, "SELECT UniqueID, Email, Fname, Lname FROM chatUsers WHERE Email = '{$email}'");
-                  if(mysqli_num_rows($sql3) > 0){
+                  $sql3 = $con->prepare("SELECT UniqueID, Email, Fname, Lname, img FROM chatUsers WHERE Email = '{$email}'");
+                  $sql3->execute();
+                  if($sql3->rowCount() > 0){
 
-                    $user = mysqli_fetch_assoc($sql3);
+                    $user = $sql3->fetch();
                     $_SESSION['id'] = $user['UniqueID'];
                     $_SESSION['email'] = $user['Email'];
                     $_SESSION['fname'] = $user['Fname'];
@@ -114,22 +124,25 @@ if(isset($_GET['signup']) ){
       $msg = "email not valid";
 
     }else{
-      $sql1 = mysqli_query($con, "SELECT COUNT(Email) FROM chatUsers WHERE Email = '{$email}'");
-      if(mysqli_fetch_column($sql1) == 0){
+      $sql1 = $con->prepare("SELECT Email FROM chatUsers WHERE Email = ?");
+      $sql1->execute(array($email));
+      if($sql1->rowCount() == 0){
         $stat = 0;
         $msg = "email Wrong";
         //echo "dd";
 
       }else{
-        $sql2 = mysqli_query($con, "SELECT UniqueID, Fname, Lname, img FROM chatUsers WHERE Email = '{$email}' AND Password = '{$pass}'");
-        if(mysqli_num_rows($sql2) == 0){
+        $sql2 = $con->prepare("SELECT UniqueID, Fname, Lname, img FROM chatUsers WHERE Email = ? AND Password = ? ");
+        $sql2->execute(array($email, $pass));
+        if($sql2->rowCount() == 0){
           $stat = 0;
           $msg = "password wrong";
 
         }else{
-          $sql4 = mysqli_query($con, "UPDATE chatUsers SET status = 1 WHERE Email = '{$email}'");
+          $user = $sql2->fetch();
+          $sql4 = $con->prepare("UPDATE chatUsers SET status = 1 WHERE Email = ?");
+          $sql4->execute(array($email));
           
-          $user = mysqli_fetch_assoc($sql2);
           $_SESSION['id'] = $user['UniqueID'];
           $_SESSION['fname'] = $user['Fname'];
           $_SESSION['lname'] = $user['Lname'];
@@ -149,7 +162,9 @@ if(isset($_GET['signup']) ){
 }elseif( isset($_GET['logout']) ){
 
   $id = $_SESSION['id'];
-  $sql = mysqli_query($con, "UPDATE chatUsers SET status = 0 WHERE UniqueID = '{$id}'");
+
+  $sql = $con->prepare("UPDATE chatUsers SET status = 0 WHERE UniqueID = ?");
+  $sql->execute(array($id));
   
   session_unset();
   session_destroy();

@@ -30,7 +30,7 @@ if(srch != null){
 let user = {
   name:   copy.querySelector('.name'),
   img:    copy.querySelector('img'),
-  //last:   copy.querySelector('.last').innerHTML,
+  lastmsg:   copy.querySelector('.last'),
   stat:   copy.querySelector('.status-dot')
 }
 
@@ -55,7 +55,10 @@ function setUser(data){
       copy.dataset.id = user_info;
 
       user.name.innerHTML = data[user_info]['name'];
-      user.img.src = "images/"+data[user_info]['img']
+      user.img.src = "images/"+data[user_info]['img'];
+
+      let msg = data[user_info]['lastmsg'];
+      user.lastmsg.innerHTML = msg == null ? "No message" : msg;
 
       if(data[user_info]['stat'] == 1){
         user.stat.classList.add('active')
@@ -83,7 +86,7 @@ function getUser(){
   xml.send();
 }
 getUser();
-setInterval(getUser,3000);
+//setInterval(getUser,3000);
 
 
 

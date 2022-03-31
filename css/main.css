@@ -19,6 +19,7 @@ body{
   border-radius: 15px;
   box-shadow: 0 0 128px 0 rgba(0,0,0,.1),
               0 32px 64px -48px rgba(0,0,0,.5);
+  margin: 0 10px;
 }
 
 
@@ -243,6 +244,9 @@ img{
   color: #333;
   margin-bottom: 20px;
 }
+.user-row .details{
+  margin: 0 15px;
+}
 .user-row .details span{
   font-size: 17px;
   font-weight: 500;
@@ -265,6 +269,12 @@ img{
 
 
 /* star chat style */
+.chat-area{
+  height: 100vh;
+  max-height: 700px;
+  display: flex;
+  flex-direction: column;
+}
 .chat-area header{
   padding: 10px 30px;
 }
@@ -289,13 +299,14 @@ img{
 }
 
 .chat-box{
-  height: 500px;
+  height: 100%;
   background: #e1e1e1;
   padding: 10px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  justify-content: end;
+  align-content: end;
+  justify-self: end;
 }
 .chat-box::-webkit-scrollbar{
   width: 0;

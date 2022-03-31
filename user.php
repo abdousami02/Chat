@@ -33,7 +33,7 @@
 
           <div class="list-search">
             <a href="" data-href="chat.php" class="copy" data-class="res-user">
-              <img src="p1.png" alt="user Image">
+              <img src="" alt="user Image">
               <span class="name">abdou sami</span>
             </a>
           </div>
@@ -45,7 +45,7 @@
       <div class="user-list">
 
         <a href="" data-href="chat.php" data-class="user-row" class="copy">
-          <img src="p2.png" alt="">
+          <img src="" alt="">
           <div class="details">
             <span class="name">Abdou</span>
             <p class="last">This is test</p>
