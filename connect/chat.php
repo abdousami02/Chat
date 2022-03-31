@@ -24,13 +24,8 @@ if(count($_SESSION) == 0 && $_SESSION['id'] == ''){
       ));
       $out[$user]["lastmsg"] = $sql->fetch(PDO::FETCH_ASSOC)['msg'];
 
-      //$last_msg[] = $user. " ".$id;
-
     }
-    // $dd = array(
-    //   "users" => $out,
-    //   "last_msg" => $last_msg
-    // );
+
     echo json_encode($out);
   
 
