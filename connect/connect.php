@@ -28,7 +28,8 @@ if(isset($_GET['signup']) ){
         $msg =  "email not valid";
 
       }else{
-        $sql = $con->prepare("SELECT email FROM chatUsers WHERE email = '{$email}'");
+        $sql = $con->prepare("SELECT Email FROM chatUsers WHERE Email = ?");
+        $sql->execute(array($email));
         if($sql->rowCount() > 0){
           $stat = 0;
           $msg = "This email already exist";
@@ -64,9 +65,9 @@ if(isset($_GET['signup']) ){
               }else{
                 $rand_id = rand(time(), 10000000);
                 
-                $sql2 = $con->prepare("INSERT INTO chatUsers (UniqueID, Fname, Lname, Email, Password, img, status)
-                VALUES (:id, :fname, :lname, :email, :pass, :img, 1)");
-                $sqle->execute(array(
+                $sql2 = $con->prepare("INSERT INTO `chatUsers` (UniqueID, Fname, Lname, Email, Password, img, status)
+                            VALUES (:id , :fname , :lname , :email , :pass , :img , 1)");
+                $sql2->execute(array(
                   "id" => $rand_id,
                   "fname" => $fname,
                   "lname" => $lname,
@@ -80,8 +81,8 @@ if(isset($_GET['signup']) ){
                   $msg = "same thing wrong";
 
                 }else{
-                  $sql3 = $con->prepare("SELECT UniqueID, Email, Fname, Lname, img FROM chatUsers WHERE Email = '{$email}'");
-                  $sql3->execute();
+                  $sql3 = $con->prepare("SELECT UniqueID, Email, Fname, Lname, img FROM chatUsers WHERE Email = ?");
+                  $sql3->execute(array($email));
                   if($sql3->rowCount() > 0){
 
                     $user = $sql3->fetch();

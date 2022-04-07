@@ -37,16 +37,20 @@ let user = {
 function setUser(data){
   
   for(user_info in data){
-    let user_id = document.querySelector('.user-list .user-row[data-id="'+user_info+'"] .status-dot');
+    let user_id = document.querySelector('.user-list .user-row[data-id="'+user_info+'"]');
     
     if(user_id != null){
 
+      let stat = user_id.querySelector('.status-dot');
       if(data[user_info]['stat'] == 1){
-        user_id.classList.add('active')
+        stat.classList.add('active')
 
       }else{
-        user_id.classList.remove('active')
+        stat.classList.remove('active')
       }
+
+      let msg = data[user_info]['lastmsg'];
+      user_id.querySelector('.details .last').innerHTML = msg == null ? "No message" : msg;
 
     }else{
       console.log(user_id)
@@ -86,7 +90,7 @@ function getUser(){
   xml.send();
 }
 getUser();
-//setInterval(getUser,3000);
+setInterval(getUser,3000);
 
 
 

@@ -8,7 +8,8 @@ const inp_msg = document.querySelector(".typing .msg"),
       btn_msg = document.querySelector(".typing .send-btn")
 
 const copy_message = document.querySelector('.chat-box .copy'),
-      box_chat = document.querySelector('.chat-box')
+      box_chat = document.querySelector('.chat-box'),
+      box_all = document.querySelector('.chat-area')
 
 const date_chat = document.querySelector('.chat-box .date')
 
@@ -85,13 +86,17 @@ function showMessage(data){
   let from, to, date, msg;
   if(data.status == 1){
 
-    for(elem of data.message){
+    for(elem of data.message){        // loop in message array
+      
 
-      if(info.last_time == elem.date){
+      if(!(info.last_time >= elem.date)){      // check if new message date same as old or not
 
-      }else{
-        info.last_time = elem.date;
-        
+        let scrolling
+        if(box_chat.scrollTop + box_chat.clientHeight + 40 > box_chat.scrollHeight){
+          scrolling = 1;
+        }else{ scrolling = 0}
+
+        info.last_time = elem.date;       // set o
         if(elem.send_msg_id == info.send_id){
           copy_msg.classList.add('send')
           copy_msg.classList.remove('rec')
@@ -115,6 +120,7 @@ function showMessage(data){
           box_chat.innerHTML += copy_msg.outerHTML
 
         }
+        if(scrolling == 1 ){scroll_btm()}
       }
     }
 
@@ -123,6 +129,9 @@ function showMessage(data){
   }
 }
 
+function scroll_btm(){
+  box_chat.scrollTop = box_chat.scrollHeight;
+}
 
 //receve message
 function getLast(){
@@ -181,5 +190,16 @@ box_chat.onclick = function(e){
   if(e.target.classList.contains('message')){
     e.target.parentElement.querySelector('.date').classList.toggle('show')
     
+  }
+}
+
+window.onresize = function(){
+  let height = document.documentElement.clientHeight;
+  box_all.style.height = height+"px";
+
+  if(document.body.clientHeight < 750){
+    document.body.style.height = height+"px";
+  }else{
+    document.body.style.height = '';
   }
 }
